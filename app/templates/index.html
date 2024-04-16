@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Acasă</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="{{ url_for('main.home') }}">Acasă</a></li>
+            <li><a href="{{ url_for('main.show_carti') }}">Afișare Cărți</a></li>
+            <li><a href="{{ url_for('main.bun_venit') }}">Profil Utilizator</a></li>
+        </ul>
+    </nav>
+    <h1>Bine ai venit la aplicația de gestionare a cărților!</h1>
+    <p>Acesta este un sistem simplu de gestiune a cărților.</p>
+</body>
+</html>

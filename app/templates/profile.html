@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profil Utilizator</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>Profilul tău</h1>
+    <form action="{{ url_for('main.update_profile') }}" method="post" enctype="multipart/form-data">
+        <label for="first_name">Prenume:</label>
+        <input type="text" id="first_name" name="first_name" value="{{ user.first_name }}">
+
+        <label for="last_name">Nume:</label>
+        <input type="text" id="last_name" name="last_name" value="{{ user.last_name }}">
+
+        <label for="faculty">Facultate:</label>
+        <input type="text" id="faculty" name="faculty" value="{{ user.faculty }}">
+
+        <label for="year">Anul:</label>
+        <input type="number" id="year" name="year" value="{{ user.year }}">
+
+        <label for="gender">Sex:</label>
+        <select id="gender" name="gender">
+            <option value="Male" {% if user.gender == 'Male' %}selected{% endif %}>Masculin</option>
+            <option value="Female" {% if user.gender == 'Female' %}selected{% endif %}>Feminin</option>
+        </select>
+
+        <label for="profile_picture">Poza de profil:</label>
+        <input type="file" id="profile_picture" name="profile_picture">
+
+        <button type="submit">Actualizează profilul</button>
+    </form>
+</body>
+</html>
