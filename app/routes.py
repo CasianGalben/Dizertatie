@@ -80,3 +80,21 @@ def bun_venit():
         return redirect(url_for('main.profile'))
     else:
         return redirect(url_for('main.login'))
+
+from sqlalchemy import or_
+
+@main.route('/search')
+def search():
+    query = request.args.get('query', '')
+    search_pattern = f"%{query}%"  
+
+    
+    matching_books = Carte.query.filter(
+        or_(
+            Carte.titlu.like(search_pattern),
+            Carte.autor.like(search_pattern),
+            Carte.an.like(search_pattern)  
+        )
+    ).all()
+
+    return render_template('search_results.html', books=matching_books, query=query)
