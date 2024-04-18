@@ -13,11 +13,13 @@
     <main>
         <section class="card-container">
             {% for carte in carti %}
-            <article class="card">
-                <h3>{{ carte.titlu }}</h3>
-                <p>Autor: <strong>{{ carte.autor }}</strong></p>
-                <p>Anul: <strong>{{ carte.an }}</strong></p>
-            </article>
+            <a href="{{ url_for('main.detalii_carte', id_carte=carte.id) }}" class="card">
+                <article>
+                    <h3>{{ carte.titlu }}</h3>
+                    <p>Autor: <strong>{{ carte.autor }}</strong></p>
+                    <p>Anul: <strong>{{ carte.an }}</strong></p>
+                </article>
+            </a>
             {% else %}
             <p>Nu există cărți disponibile.</p>
             {% endfor %}

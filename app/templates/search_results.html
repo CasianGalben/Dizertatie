@@ -70,6 +70,14 @@
             <div class="book-title">{{ book.titlu }}</div>
             <div class="book-author">Autor: {{ book.autor }}</div>
             <div class="book-year">Anul Publicării: {{ book.an }}</div>
+            <div>
+                <h3>Comentarii:</h3>
+                {% for comentariu in book.comentarii %}
+                <p>{{ comentariu.continut }}</p>
+                {% else %}
+                <p>Niciun comentariu disponibil.</p>
+                {% endfor %}
+            </div>
         </div>
         {% else %}
         <div class="book-item">

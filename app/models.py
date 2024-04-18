@@ -7,6 +7,7 @@ class Carte(db.Model):
     titlu = db.Column(db.String(255), nullable=False)
     autor = db.Column(db.String(255), nullable=False)
     an = db.Column(db.Integer, nullable=False)
+    comentarii = db.relationship('Comentariu', backref='carte', lazy=True)
 
     def __repr__(self):
         return f"<Carte {self.titlu} de {self.autor}, anul {self.an}>"
@@ -15,7 +16,6 @@ def init_db(app):
     db.init_app(app)
     with app.app_context():
         db.create_all()  # Crează tabelele dacă nu există deja
-
 
 def import_books_from_file(file_path):
     books = []
@@ -34,7 +34,6 @@ def import_books_from_file(file_path):
         db.session.rollback()
         print(f"Failed to import books: {str(e)}")
 
-
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
@@ -43,7 +42,7 @@ class User(db.Model):
     faculty = db.Column(db.String(100))
     year = db.Column(db.Integer)
     gender = db.Column(db.String(10))
-    profile_picture = db.Column(db.String(200))  # Path to the image
+    profile_picture = db.Column(db.String(200))
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -51,5 +50,11 @@ class User(db.Model):
     def __repr__(self):
         return f'<User {self.username}>'
 
+class Comentariu(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    continut = db.Column(db.Text, nullable=False)
+    id_carte = db.Column(db.Integer, db.ForeignKey('carte.id'), nullable=False)
+    id_utilizator = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
 
-
+    def __repr__(self):
+        return f'<Comentariu "{self.continut[:30]}..." pentru Carte ID {self.id_carte}>'
