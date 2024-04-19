@@ -58,17 +58,30 @@
             max-width: 1100px;
             margin: 50px auto;
             display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .search-container, .additional-buttons-container {
+            display: flex;
             justify-content: center;
             align-items: center;
-            flex-wrap: wrap;
+            margin: 20px;
         }
-        .container img {
+        .search-container img, .additional-buttons-container img {
             border-radius: 50%;
-            width: 250px; /* Mărimea imaginii */
+            width: 200px;
             margin: 20px;
         }
-        .container form {
-            margin: 20px;
+        input[type="text"] {
+            padding: 10px;
+            width: 300px;
+            border: 2px solid #ddd;
+            border-radius: 20px;
+            transition: border-color 0.3s;
+        }
+        input[type="text"]:focus {
+            border-color: #0056b3;
+            outline: none;
         }
         .button {
             background: #ff8c00;
@@ -76,10 +89,9 @@
             padding: 15px 30px;
             font-size: 18px;
             border: none;
-            border-radius: 5px;
+            border-radius: 20px;
             cursor: pointer;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            margin-left: -20px; /* Ajustează poziția butonului față de imagine */
         }
         .button:hover {
             background: #e67e00;
@@ -110,16 +122,22 @@
     </header>
 
     <div class="container">
-        <img src="{{ url_for('static', filename='CarteCautare1.png') }}" alt="Căutare">
-        <form action="{{ url_for('main.search') }}" method="get">
-            <input type="text" name="query" placeholder="Caută cărți..." required>
-            <button type="submit" class="button">Caută</button>
-        </form>
+        <div class="search-container">
+            <form action="{{ url_for('main.search') }}" method="get">
+                <input type="text" name="query" placeholder="Caută cărți..." required>
+                <button type="submit" class="button">Caută</button>
+            </form>
+            <img src="{{ url_for('static', filename='CarteCautare1.png') }}" alt="Căutare">
+        </div>
 
-        <form action="{{ url_for('main.show_carti') }}" method="get">
-            <button type="submit" class="button">Afișare Cărți</button>
-        </form>
-        <img src="{{ url_for('static', filename='CarteCautare.png') }}" alt="Cărți">
+        <div class="additional-buttons-container">
+            <form action="{{ url_for('main.show_carti') }}" method="get">
+                <button type="submit" class="button">Afișare Cărți</button>
+            </form>
+            <img src="{{ url_for('static', filename='CarteCautare.png') }}" alt="Cărți">
+            <a href="https://scholar.google.com" target="_blank" class="button">Google Scholar</a>
+            <img src="{{ url_for('static', filename='GoogleSchoolar.png') }}" alt="Google Scholar">
+        </div>
     </div>
 
     <footer>
