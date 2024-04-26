@@ -15,7 +15,7 @@ class Carte(db.Model):
 def init_db(app):
     db.init_app(app)
     with app.app_context():
-        db.create_all()  # Crează tabelele dacă nu există deja
+        db.create_all()  
 
 def import_books_from_file(file_path):
     books = []

@@ -39,17 +39,20 @@ def proceseaza_login():
 
 @main.route('/profile')
 def profile():
-    if 'user_id' not in session:
-        return redirect(url_for('main.login'))
-    user = User.query.get(session['user_id'])
+    user= None
     return render_template('profile.html', user=user)
 
 @main.route('/update_profile', methods=['GET', 'POST'])
 def update_profile():
-    if 'user_id' not in session:
-        return redirect(url_for('main.login'))
-    user = User.query.get(session['user_id'])
+    user = None
+    if 'user_id' in session:
+        user = User.query.get(session['user_id'])
+
     if request.method == 'POST':
+        if user is None:
+            user = User()  
+            db.session.add(user)
+
         user.first_name = request.form['first_name']
         user.last_name = request.form['last_name']
         user.faculty = request.form['faculty']
@@ -66,7 +69,7 @@ def update_profile():
         db.session.commit()
         flash('Profilul a fost actualizat cu succes.', 'success')
 
-    return render_template('profile_update.html', user=user)
+    return render_template('profile_update.html', user=user if user else {})
 
 @main.route('/BunVenit')
 def bun_venit():
