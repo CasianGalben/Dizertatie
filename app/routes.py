@@ -1,8 +1,11 @@
-from flask import Blueprint, request, jsonify, render_template, flash, redirect, url_for, session
+from flask import Blueprint, request, jsonify, render_template, flash, redirect, url_for, session, current_app, send_from_directory
 from werkzeug.utils import secure_filename
-import os
 from .models import db, Carte, User, Comentariu
 from sqlalchemy.orm import joinedload
+from .model_training_collaborative_filtering import train_and_save_model, load_and_plot
+import os
+import numpy as np
+
 
 main = Blueprint('main', __name__)
 
@@ -117,4 +120,84 @@ def detalii_carte(id_carte):
     
     return render_template('detalii_carte.html', carte=carte, comentarii=comentarii)
 
+@main.route('/train-collaborative-filtering', methods=['POST'])
+def train_collaborative_filtering():
+    file = request.files['dataset']
+    if file:
+        filename = secure_filename(file.filename)
+        file_path = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
+        file.save(file_path)
+        evaluation_results, model_path = train_and_save_model(file_path)
+        graphics_filenames = load_and_plot(file_path)
+        session['model_path'] = model_path
+        session['graphics_filenames'] = graphics_filenames
+        flash('Model antrenat și grafice generate cu succes.')
+        return redirect(url_for('main.display_results_collaborative'))
+    else:
+        flash('Eroare la încărcarea fișierului.')
+        return redirect(url_for('main.home'))
+    
+from flask import render_template, session, jsonify
+import json
 
+@main.route('/display-results-collaborative', methods=['GET'])
+def display_results_collaborative():
+    evaluation_results = session.get('evaluation_results', {})
+    model_path = session.get('model_path', '')
+    graphics_filenames_json = session.get('graphics_filenames', '{}')
+
+    
+    try:
+        graphics_filenames = json.loads(graphics_filenames_json)
+    except json.JSONDecodeError:
+        graphics_filenames = {}
+
+    return render_template('results_collaborative.html',
+                           evaluation_results=evaluation_results,
+                           model_path=model_path,
+                           graphics_filenames=graphics_filenames)
+
+
+@main.route('/get-graph/<filename>', methods=['GET'])
+def get_graph(filename):
+    directory = os.path.join(current_app.config['UPLOAD_FOLDER'], 'images')
+    return send_from_directory(directory, filename)
+
+@main.route('/upload_collaborative_data', methods=['POST'])
+def upload_collaborative_data():
+    file = request.files['data_file']
+    if file:
+        filename = secure_filename(file.filename)
+        filepath = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
+        os.makedirs(current_app.config['UPLOAD_FOLDER'], exist_ok=True)
+        file.save(filepath)
+        
+        
+        evaluation_results, model_path = train_and_save_model(filepath)
+        graphics_filenames = load_and_plot(filepath)
+        
+        
+        for key, value in evaluation_results.items():
+            if isinstance(value, np.ndarray):
+                evaluation_results[key] = value.tolist()
+        
+        
+        session['evaluation_results'] = evaluation_results
+        session['model_path'] = model_path
+        session['graphics_filenames'] = graphics_filenames
+        
+        flash('Modelul a fost antrenat și graficele au fost generate cu succes.')
+        return redirect(url_for('main.display_results_collaborative'))
+    else:
+        flash('Nu a fost selectat niciun fișier', 'error')
+        return redirect(url_for('main.index'))
+
+@main.route('/download_collaborative_model/<filename>')
+def download_collaborative_model(filename):
+    
+    static_folder = current_app.config.get('STATIC_FOLDER', 'static')
+    directory = os.path.join(current_app.root_path, static_folder)   
+    if not os.path.exists(os.path.join(directory, filename)):
+        return "Fișierul nu a fost găsit. "+ directory +"", 404
+    
+    return send_from_directory(directory=directory, filename=filename, as_attachment=True)
