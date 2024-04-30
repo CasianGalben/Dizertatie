@@ -9,7 +9,7 @@
             font-family: 'Arial', sans-serif;
             margin: 0;
             padding: 0;
-            background: #fff;
+            background: #f4f4f4;
             color: #333;
             line-height: 1.6;
         }
@@ -48,10 +48,12 @@
         .main-header {
             text-align: center;
             padding: 50px 20px;
+            background: #fff;
+            border-bottom: 2px solid #eee;
         }
         .main-header h1 {
             margin: 0;
-            font-size: 40px;
+            font-size: 32px;
             color: #333;
         }
         .container {
@@ -66,6 +68,10 @@
             justify-content: center;
             align-items: center;
             margin: 20px;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
         .search-container img, .additional-buttons-container img {
             border-radius: 50%;
@@ -144,9 +150,11 @@
     </nav>
 
     <header class="main-header">
-        <h1>Bine ai venit pe SudVestAcademy!</h1>
-        <p>Conectează-te cu comunitatea științifică și descoperă cercetările din domeniul tău.</p>
+        <h1>SudVestAcademy</h1>
+        <img src="{{ url_for('static', filename='SudvestAcademy.png') }}" alt="Logo SudVestAcademy" style="width: 200px; height: auto; border-radius: 50%; display: block; margin: 10px auto;">
     </header>
+    
+    
 
     <div class="container">
         <div class="search-container">
@@ -155,38 +163,41 @@
                 <button type="submit" class="button">Caută</button>
             </form>
             <img src="{{ url_for('static', filename='CarteCautare1.png') }}" alt="Căutare">
-
-            <form action="{{ url_for('naive_bayes.upload_NaiveBayes_data') }}" method="post" enctype="multipart/form-data">
-                <div class="file-input">
-                    <input type="file" id="train_data" name="train_data" required>
-                    <label for="train_data">Selectează datele de antrenare</label>
-                </div>
-                <div class="file-input">
-                    <input type="file" id="test_data" name="test_data" required>
-                    <label for="test_data">Selectează datele de test</label>
-                </div>
-                <button type="submit" class="button">Antrenează Modelul Naive Bayes</button>
-            </form>
-
-            <form action="{{ url_for('main.upload_collaborative_data') }}" method="post" enctype="multipart/form-data">
-                <div class="file-input">
-                    <input type="file" id="data_file" name="data_file" required>
-                    <label for="data_file">Încarcă Datele pentru Collaborative Filtering</label>
-                </div>
-                <button type="submit" class="button">Antrenează Modelul Collaborative</button>
-            </form>
-
         </div>
 
         <div class="additional-buttons-container">
-            
             <form action="{{ url_for('main.show_carti') }}" method="get">
                 <button type="submit" class="button">Afișare Cărți</button>
             </form>
             <img src="{{ url_for('static', filename='CarteCautare.png') }}" alt="Cărți">
             <a href="https://scholar.google.com" target="_blank" class="button">Google Scholar</a>
             <img src="{{ url_for('static', filename='GoogleSchoolar.png') }}" alt="Google Scholar">
+
+            <form action="{{ url_for('naive_bayes.upload_NaiveBayes_data') }}" method="post" enctype="multipart/form-data">
+                <div class="file-input">
+                    <input type="file" id="train_data_nb" name="train_data" required>
+                    <label for="train_data_nb">Selectează datele de antrenare NB</label>
+                </div>
+                <div class="file-input">
+                    <input type="file" id="test_data_nb" name="test_data" required>
+                    <label for="test_data_nb">Selectează datele de test NB</label>
+                </div>
+                <button type="submit" class="button">Antrenează Modelul Naive Bayes</button>
+            </form>
+            <img src="{{ url_for('static', filename='Naive_Bayes_Logo.png') }}" alt="Naive Bayes">
+            <form action="{{ url_for('main.upload_collaborative_data') }}" method="post" enctype="multipart/form-data">
+                <div class="file-input">
+                    <input type="file" id="data_file_cf" name="data_file" required>
+                    <label for="data_file_cf">Încarcă Datele pentru CF</label>
+                </div>
+                <button type="submit" class="button">Antrenează Modelul Collaborative</button>
+            </form>
+            <img src="{{ url_for('static', filename='Collaborative_Logo.png') }}" alt="Collaborative Filtering">
+
+
         </div>
+
+        
     </div>
 
     <footer>

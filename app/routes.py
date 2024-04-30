@@ -191,13 +191,11 @@ def upload_collaborative_data():
     else:
         flash('Nu a fost selectat niciun fișier', 'error')
         return redirect(url_for('main.index'))
-
+    
 @main.route('/download_collaborative_model/<filename>')
 def download_collaborative_model(filename):
-    
-    static_folder = current_app.config.get('STATIC_FOLDER', 'static')
-    directory = os.path.join(current_app.root_path, static_folder)   
+    directory = 'E:/Dizertatie/static'
     if not os.path.exists(os.path.join(directory, filename)):
-        return "Fișierul nu a fost găsit. "+ directory +"", 404
+        return f"Fișierul {filename} nu a fost găsit.", 404
     
-    return send_from_directory(directory=directory, filename=filename, as_attachment=True)
+    return send_from_directory(directory=directory, path=filename, as_attachment=True)
